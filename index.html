@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MuHamMaD ReحAn AhMeD — Intro</title>
+  <meta name="description" content="Futuristic crystal-glass intro with blue neon parallelograms and smooth animations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg0:#060912; --bg1:#0b1120;
+      --text:#e6f0ff; --muted:#9fb0c8; --soft:#cfe0ff;
+
+      /* Blue + Black animated gradient (replaces multi-color neon) */
+      --neon: linear-gradient(120deg, #00e5ff, #001021, #000000, #001021, #00e5ff);
+
+      --white-glow: 0 0 12px rgba(255,255,255,.55), 0 0 30px rgba(255,255,255,.25);
+      --card-glow: 0 14px 40px rgba(0,0,0,.5), var(--white-glow);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family:"Orbitron", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      letter-spacing:.3px;
+      background:
+        radial-gradient(1200px 600px at 10% 12%, rgba(164,0,255,.12), transparent 60%),
+        radial-gradient(1200px 600px at 90% 88%, rgba(0,234,255,.12), transparent 60%),
+        linear-gradient(180deg,var(--bg0),var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* Background photo (slightly darker so animation pops) */
+    .bg-image{
+      position:fixed; inset:0; z-index:-3;
+      background-image:url('./assets/photo.jpg');
+      background-size:cover; background-position:center;
+      filter: saturate(.9) contrast(1.05) brightness(.58);
+      transform:scale(1.04);
+    }
+
+    /* Particles layer; brighten over bg */
+    #tsparticles{ position:fixed; inset:0; z-index:-2; }
+    #tsparticles canvas{ mix-blend-mode: screen; }
+
+    /* Holographic grid overlay (smooth/slow) */
+    .grid-overlay{
+      position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.18;
+      background-image:
+        linear-gradient(transparent 97%, rgba(255,255,255,.06) 100%),
+        linear-gradient(90deg, transparent 97%, rgba(255,255,255,.06) 100%);
+      background-size:100% 30px, 30px 100%;
+      mix-blend-mode:overlay;
+      animation:drift 80s ease-in-out infinite;
+    }
+    @keyframes drift{ to{ transform:translateY(-30px) } }
+
+    main{ min-height:100dvh; display:grid; place-items:center; padding:clamp(16px,4vw,48px) }
+
+    /* Crystal glass card */
+    .card{
+      width:min(1100px,94vw);
+      position:relative; overflow:hidden; border-radius:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)) padding-box;
+      border:1.25px solid rgba(255,255,255,.50);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: var(--card-glow);
+      transform-style:preserve-3d;
+      opacity:0; transform:translateY(10px) scale(.985);
+      animation:reveal 1000ms ease-out 200ms forwards;
+      transition: transform .12s ease-out;
+    }
+    @keyframes reveal{ to{ opacity:1; transform:translateY(0) scale(1) } }
+
+    /* White glow perimeter */
+    .card::before{
+      content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+      background: conic-gradient(from 0deg, rgba(255,255,255,.35), rgba(255,255,255,.05), rgba(255,255,255,.35));
+      filter: blur(26px); opacity:.45; z-index:0; animation:spin 22s linear infinite;
+    }
+    @keyframes spin{ to{ transform:rotate(1turn) } }
+
+    /* Subtle crystalline noise */
+    .card::after{
+      content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:0;
+      background:
+        repeating-linear-gradient(125deg, rgba(255,255,255,.05) 0 2px, transparent 2px 6px),
+        repeating-linear-gradient(305deg, rgba(255,255,255,.04) 0 1px, transparent 1px 5px);
+      mix-blend-mode:overlay; opacity:.26;
+    }
+
+    .content{ position:relative; z-index:1; padding:clamp(22px,4vw,48px); display:grid; gap:26px }
+
+    /* Hero */
+    .hero{
+      display:grid; grid-template-columns: 1.2fr .9fr; gap:24px; align-items:center;
+    }
+    .hero-text h1{
+      margin:0; font-weight:700; letter-spacing:1px;
+      font-size:clamp(36px,6.5vw,64px);
+      text-shadow: 0 0 10px rgba(255,255,255,.15);
+    }
+    .hero-text .tagline{ margin:8px 0 0; color:var(--muted); font-weight:600; font-size:clamp(14px,1.6vw,18px) }
+
+    /* Portrait with BLUE/BLACK neon border (glass inside) */
+    .portrait{
+      position:relative; width:min(340px, 75vw); aspect-ratio: 4/5; margin-left:auto;
+      border:1.5px solid transparent; border-radius:22px; overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)) padding-box,
+        var(--neon) border-box;
+      background-size: auto, 300% 300%;
+      animation: borderFlow 12s ease-in-out infinite;
+      box-shadow: 0 0 24px rgba(255,255,255,.18), 0 10px 40px rgba(0,0,0,.5);
+      backdrop-filter: blur(6px);
+    }
+    .portrait img{ width:100%; height:100%; object-fit:cover; filter:contrast(1.03) saturate(1.02) }
+    .portrait::after{
+      content:""; position:absolute; inset:-10%;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.18) 50%, transparent 60%);
+      transform: translateX(-120%); animation: sweep 6s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    /* INFO GRID — transparent parallelograms, blue/black neon border, liquid-glass texture */
+    .info-grid{
+      display:grid; gap:16px 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-top:6px;
+    }
+    .info{
+      position:relative; overflow:hidden;
+      clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); /* angle A */
+      background: transparent; /* interior stays clear */
+      backdrop-filter: blur(8px) saturate(140%);
+      -webkit-backdrop-filter: blur(8px) saturate(140%);
+      filter: drop-shadow(0 0 16px rgba(0,229,255,.18))
+              drop-shadow(0 0 18px rgba(0,0,0,.25))
+              drop-shadow(0 8px 24px rgba(0,0,0,.35));
+      border-radius:16px;
+    }
+    .info:nth-child(even){
+      clip-path: polygon(0 0, 90% 0, 100% 100%, 10% 100%); /* angle B */
+    }
+    /* Neon gradient BORDER ONLY via mask ring */
+    .info::before{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background: var(--neon);
+      background-size: 260% 260%;
+      animation: borderFlow 12s ease-in-out infinite;
+      padding: 2px; /* border thickness */
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;  /* Chrome/Safari */
+              mask-composite: exclude; /* Standard */
+      clip-path: inherit; border-radius:16px;
+    }
+    /* Liquid-glass highlights (still transparent) */
+    .info::after{
+      content:""; position:absolute; inset:2px; pointer-events:none;
+      clip-path: inherit; border-radius:14px;
+      background:
+        radial-gradient(130px 160px at 22% 30%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(160px 130px at 78% 55%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(110px 120px at 42% 80%, rgba(255,255,255,.10), transparent 60%);
+      filter: blur(10px) saturate(150%);
+      opacity:.35; mix-blend-mode:screen;
+      animation: liquid 16s ease-in-out infinite;
+    }
+    .info-inner{
+      position:relative; z-index:1;
+      padding:16px 24px 18px 24px;
+      color:#e9f2ff; text-shadow:0 1px 1px rgba(0,0,0,.30);
+      min-height:76px; display:flex; flex-direction:column; justify-content:center;
+    }
+    .label{
+      font-size:11px; text-transform:uppercase; letter-spacing:1.1px;
+      color:#c8d0e0; opacity:.9; margin-bottom:6px;
+    }
+    .value{
+      font-size:16px; letter-spacing:.6px; font-weight:700; color:#e9f2ff;
+    }
+
+    /* Subtle light animation on ALL text */
+    @keyframes textPulse {
+      0%, 100% { text-shadow: 0 0 0 rgba(255,255,255,0); }
+      50%      { text-shadow: 0 0 8px rgba(255,255,255,.15); }
+    }
+    .content h1,
+    .content h2,
+    .content h3,
+    .content p,
+    .content .label,
+    .content .value,
+    .content li,
+    footer,
+    .welcome h2,
+    .welcome p,
+    .welcome .btn {
+      animation: textPulse 6.5s ease-in-out infinite;
+    }
+
+    /* Traits */
+    .section h3{ margin:6px 0 10px; font-weight:700; letter-spacing:.8px }
+    ul.traits{ list-style:none; padding:0; margin:0 }
+    ul.traits li{
+      position:relative; padding-left:18px; margin:8px 0; color:var(--soft); line-height:1.65;
+    }
+    ul.traits li::before{
+      content:""; position:absolute; left:0; top:.6em; width:8px; height:8px; border-radius:50%;
+      background: var(--neon); background-size:200% 200%; animation:borderFlow 12s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(0,229,255,.35), 0 0 12px rgba(0,0,0,.35);
+    }
+
+    footer{ margin-top:10px; font-size:12px; color:#9aa5b1; opacity:.85 }
+
+    /* Welcome popup */
+    .welcome-overlay{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      background: rgba(2,6,14,.55); backdrop-filter: blur(6px);
+      z-index:9999; opacity:0; pointer-events:none; transition: opacity .45s ease-in-out;
+    }
+    .welcome-overlay.show{ opacity:1; pointer-events:auto; }
+    .welcome{
+      min-width: min(520px, 92vw);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.55); border-radius:18px; padding:20px 18px;
+      box-shadow: var(--white-glow);
+      text-align:center;
+    }
+    .welcome .btn{
+      display:inline-block; padding:10px 14px; border-radius:10px;
+      color:#fff; text-decoration:none; font-weight:700; letter-spacing:.6px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02)) padding-box,
+        var(--neon) border-box;
+      border:1.5px solid transparent;
+      background-size:auto, 300% 300%;
+      animation:borderFlow 12s ease-in-out infinite, textPulse 6.5s ease-in-out infinite;
+      box-shadow: 0 6px 24px rgba(0,0,0,.35);
+    }
+
+    /* Shared animations */
+    @keyframes borderFlow{ to{ background-position: 300% 0; } }
+    @keyframes sweep{ 50%{ transform: translateX(120%)} 100%{ transform: translateX(120%)} }
+    @keyframes liquid{
+      0%{ transform: translate3d(-1%,0,0) }
+      50%{ transform: translate3d(1%,-1%,0) }
+      100%{ transform: translate3d(-1%,1%,0) }
+    }
+
+    @media (max-width:900px){
+      .hero{ grid-template-columns: 1fr; }
+      .portrait{ margin:0 auto }
+      .hero-text{ text-align:center }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .grid-overlay, .portrait::after, .info::after, .welcome .btn, .content *{ animation:none !important }
+      #tsparticles{ display:none }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-image" aria-hidden="true"></div>
+  <div id="tsparticles"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <main>
+    <article class="card" id="card">
+      <div class="content">
+        <!-- HERO -->
+        <header class="hero">
+          <div class="hero-text">
+            <h1>MuHamMaD ReحAn AhMeD</h1>
+            <p class="tagline">1st Year</p>
+          </div>
+          <figure class="portrait">
+            <img src="./assets/photo.jpg" alt="Portrait of MuHamMaD ReحAn AhMeD" />
+          </figure>
+        </header>
+
+        <!-- INFO PARALLELOGRAMS (includes Hobbies) -->
+        <section class="info-grid">
+          <div class="info"><div class="info-inner">
+            <div class="label">Father's Name</div>
+            <div class="value">Kamran Babar</div>
+          </div></div>
+
+          <div class="info"><div class="info-inner">
+            <div class="label">Class</div>
+            <div class="value">1st Year</div>
+          </div></div>
+
+          <div class="info"><div class="info-inner">
+            <div class="label">Favourite Drink</div>
+            <div class="value">Coffee</div>
+          </div></div>
+
+          <div class="info"><div class="info-inner">
+            <div class="label">Birth star</div>
+            <div class="value">Leo</div>
+          </div></div>
+<div class="info"><div class="info-inner">
+            <div class="label">Favourite Subject</div>
+            <div class="value">Computer science</div>
+          </div></div>
+<div class="info"><div class="info-inner">
+            <div class="label">Passion</div>
+            <div class="value">Coding & Programming</div>
+          </div></div>
+<div class="info"><div class="info-inner">
+            <div class="label">Dream Destination</div>
+            <div class="value">Turkey</div>
+          </div></div>
+<div class="info"><div class="info-inner">
+            <div class="label">Motivation</div>
+            <div class="value">Creating real solutions through code</div>
+          </div></div>
+
+          <div class="info"><div class="info-inner">
+            <div class="label">Hobbies</div>
+            <div class="value">Reading books • Exploring Technology</div>
+          </div></div>
+        </section>
+
+        <!-- TRAITS -->
+        <section class="section">
+          <h3>Some lines about me</h3>
+          <ul class="traits">
+            <li>Creative Thinking – Tries new ways to solve problems.</li>
+            <li>Self-Discipline – Manages time, distractions, and stress wisely.</li>
+            <li>Passion – Has real interest in learning, not just marks.</li>
+            <li>Responsibility – Takes ownership of mistakes and learns from them.</li>
+            <li>Good Attitude – Respectful, positive, and helpful to others.</li>
+          </ul>
+        </section>
+
+        <footer>© <span id="year"></span> MuHamMaD ReحAn AhMeD</footer>
+      </div>
+    </article>
+  </main>
+
+  <!-- Welcome popup -->
+  <div class="welcome-overlay" id="welcome">
+    <div class="welcome" role="dialog" aria-labelledby="welcome-title" aria-modal="true">
+      <h2 id="welcome-title">Welcome ✨</h2>
+      <p>Welcome to my futuristic intro page.</p>
+      <a href="#" class="btn" id="welcome-ok">Enter</a>
+    </div>
+  </div>
+
+  <!-- tsParticles (MIT) -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <!-- Confetti (MIT) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script>
+    // Smooth, blue-toned particles
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: { color: "transparent" },
+      fpsLimit: 90,
+      detectRetina: true,
+      particles: {
+        number: { value: 80, density: { enable: true, area: 800 } },
+        color: { value: ["#00e5ff", "#00b6ff", "#6bc7ff"] },
+        shape: { type: "circle" },
+        opacity: {
+          value: 0.42,
+          animation: { enable: true, speed: 0.5, minimumValue: 0.25, startValue: "random" }
+        },
+        size: { value: { min: 1, max: 4 } },
+        links: { enable: true, distance: 140, color: "#bfeaff", opacity: 0.45, width: 1.1 },
+        move: { enable: true, speed: 0.6, outModes: { default: "out" } }
+      },
+      twinkle: {
+        particles: { enable: true, frequency: 0.04, opacity: 0.95 },
+        lines: { enable: true, frequency: 0.004, opacity: 0.5 }
+      },
+      interactivity: {
+        events: { onHover: { enable: true, mode: "repulse" }, resize: true },
+        modes: { repulse: { distance: 120, duration: 0.25 } }
+      }
+    });
+
+    // Gentle 3D tilt (smoother)
+    const card = document.getElementById('card');
+    function tilt(e){
+      const r = card.getBoundingClientRect();
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      const dx = e.clientX - cx, dy = e.clientY - cy;
+      const rx = (dy/(r.height/2)) * 5;
+      const ry = (-dx/(r.width/2)) * 5;
+      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    }
+    function reset(){ card.style.transform = ""; }
+    card.addEventListener('mousemove', tilt);
+    card.addEventListener('mouseleave', reset);
+
+    // Confetti helpers
+    function confettiBurst(){
+      const opts = { particleCount: 80, spread: 70, startVelocity: 45, zIndex: 10000, origin: { y: 0.2 } };
+      confetti({ ...opts, origin: { x: 0.2, y: 0.2 } });
+      confetti({ ...opts, origin: { x: 0.8, y: 0.2 } });
+      setTimeout(()=>confetti({ ...opts, particleCount: 60, spread: 100, origin:{ x: 0.5, y: 0.2 }}), 250);
+    }
+
+    // Welcome popup once per session + confetti
+    const welcome = document.getElementById('welcome');
+    const okBtn = document.getElementById('welcome-ok');
+    function openWelcome(){
+      if(sessionStorage.getItem('welcomed')) return;
+      welcome.classList.add('show');
+      confettiBurst();
+    }
+    function closeWelcome(e){
+      if(e) e.preventDefault();
+      welcome.classList.remove('show');
+      sessionStorage.setItem('welcomed','1');
+      confettiBurst();
+    }
+    okBtn.addEventListener('click', closeWelcome);
+    welcome.addEventListener('click', (e)=>{ if(e.target === welcome) closeWelcome(); });
+    window.addEventListener('load', openWelcome);
+
+    // Year + fallback
+    document.getElementById('year').textContent = new Date().getFullYear();
+    if(!CSS.supports("backdrop-filter: blur(1px)")){
+      document.querySelector('.card').style.background = "rgba(17,25,40,0.75)";
+    }
+  </script>
+</body>
+</html>
