@@ -9,223 +9,269 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Great+Vibes&family=Marcellus&display=swap" rel="stylesheet">
 
   <style>
-    :root {
+    /* ----------------------------
+       Base color system (light + dark)
+       ---------------------------- */
+    :root{
       --royal-blue: #1C4073;
-      --royal-blue-soft: #2A4E88;
       --gold-beige: #D9C8A6;
       --soft-cream: #F7F4EE;
-      --rich-brown: #4A2F21;
-
-      --text-main: #3B2A1E;
+      --accent: var(--royal-blue);
+      --accent-2: var(--gold-beige);
+      --text-main: #2f2a1e;
       --text-soft: #5A4638;
-
-      --card-bg: rgba(255,255,255,0.65);
-      --border: rgba(0,0,0,0.12);
-      --glow: 0 6px 30px rgba(28,64,115,0.18);
-
-      --light-gradient: linear-gradient(135deg, var(--soft-cream), #f0e7d8 40%, var(--royal-blue-soft) 95%);
+      --card-bg: rgba(255,255,255,0.66);
+      --border: rgba(0,0,0,0.10);
+      --glow: 0 8px 40px rgba(28,64,115,0.12);
+      --neon-red: #ff1e1e;
+      --bg-light-gradient: linear-gradient(135deg,#faf7f2 0%,#ece5d8 45%,#d6c6af 100%);
     }
-
-    body.dark {
-      --bg: #000000;
-      --accent: #ff1e1e;
-      --accent-2: #ffffff;
-
-      --text-main: #ffffff;
-      --text-soft: rgba(255,255,255,0.8);
-
+    body.dark{
+      --accent: var(--neon-red);
+      --text-main: #fff;
+      --text-soft: rgba(255,255,255,0.78);
       --card-bg: rgba(255,0,0,0.06);
-      --border: rgba(255,0,0,0.45);
-      --glow: 0 0 32px rgba(255,0,0,0.55);
+      --border: rgba(255,0,0,0.36);
+      --glow: 0 0 48px rgba(255,0,0,0.45);
+      --bg-light-gradient: #000000;
     }
 
-    html { scroll-behavior:smooth; }
-    body {
-      font-family:"Marcellus", serif;
-      background:var(--light-gradient);
+    /* ----------------------------
+       Reset & base
+       ---------------------------- */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"Marcellus",serif;
+      background:var(--bg-light-gradient);
       color:var(--text-main);
-      transition: background .45s ease, color .45s ease;
-      overflow-x:hidden;
-    }
-    body.dark { background:var(--bg); animation:darkPulse 6s infinite alternate ease-in-out; }
-
-    @keyframes darkPulse {
-      0% { background:#000000; }
-      100% { background:#1a0000; }
+      transition:background .45s ease,color .35s ease;
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
-    /* background scanner overlay */
+    /* ----------------------------
+       Loading screen
+       ---------------------------- */
+    #preloader{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(245,243,240,0.95));
+      z-index:9999;transition:opacity .35s ease;backdrop-filter: blur(2px);
+    }
+    body.dark #preloader{ background:linear-gradient(180deg,#090909,#050202); }
+    .spinner{
+      width:86px;height:86px;border-radius:50%;
+      display:grid;place-items:center;position:relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    }
+    .spinner::after{
+      content:"";position:absolute;inset:-8px;border-radius:50%;
+      border:6px solid transparent;border-top-color:var(--accent); animation:spin 1.1s linear infinite;
+    }
+    body.dark .spinner::after{ border-top-color:var(--neon-red); }
+    .spinner svg{width:54px;height:54px;opacity:.95}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #preloader.hidden{opacity:0;pointer-events:none;visibility:hidden}
+
+    /* ----------------------------
+       Tech background (no watermark)
+       ---------------------------- */
     .tech-bg{
-      position:fixed;
-      inset:0;
-      opacity:.05;
-      z-index:-5;
-      background:url('https://i.ibb.co/rm0F3tr/techlines.png') center/cover no-repeat;
-      transition:opacity .4s ease;
+      position:fixed;inset:0;z-index:-5;opacity:.08;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0%, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 0%, transparent 45%),
+        linear-gradient(135deg,#e7ecf3 0%, #d6dce7 40%, #c4d1e0 100%);
+      transition:opacity .4s;
     }
-    body.dark .tech-bg {
-      background: repeating-linear-gradient(90deg, rgba(255,0,0,0.14) 0, rgba(255,0,0,0.14) 2px, transparent 2px, transparent 6px);
+    body.dark .tech-bg{
+      background:
+        repeating-linear-gradient(90deg, rgba(255,0,0,0.12) 0, rgba(255,0,0,0.12) 2px, transparent 2px, transparent 6px),
+        linear-gradient(135deg,#050000,#120000);
       animation:scan 6s linear infinite;
-      opacity:.16;
+      opacity:.18;
     }
-    @keyframes scan { from{background-position:0 0} to{background-position:240px 0} }
+    @keyframes scan{from{background-position:0 0} to{background-position:240px 0}}
 
-    .wrap { max-width:1150px; margin:auto; padding:30px 22px; }
+    /* ----------------------------
+       Layout
+       ---------------------------- */
+    .wrap{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .title{font-family:'Playfair Display';font-size:22px;color:var(--accent);font-weight:700}
+    body.dark .title{color:var(--neon-red)}
+    .signature{font-family:'Great Vibes';font-size:20px;color:var(--text-soft)}
+    body.dark .signature{color:#fff}
 
-    header { display:flex; justify-content:space-between; align-items:center; }
-    .title { font-family:"Playfair Display"; font-size:22px; color:var(--royal-blue); font-weight:700; }
-    body.dark .title { color: #ff1e1e; }
-
-    .signature { font-family:"Great Vibes",cursive; font-size:22px; margin-top:-4px; color:var(--text-soft); }
-    body.dark .signature { color:white; }
-
-    .toggle-dark {
-      padding:10px 18px;
-      border-radius:12px;
-      border:2px solid var(--royal-blue);
-      background:transparent;
-      color:var(--royal-blue);
-      cursor:pointer;
-      font-weight:700;
-      transition:.25s;
+    .toggle-dark{
+      padding:10px 14px;border-radius:12px;border:2px solid var(--accent);
+      background:transparent;color:var(--accent);cursor:pointer;font-weight:700;transition:.25s;
     }
-    body.dark .toggle-dark { border-color:red; color:white; box-shadow:0 0 20px red; }
+    body.dark .toggle-dark{border-color:var(--neon-red);color:#fff;box-shadow:0 0 18px rgba(255,0,0,0.35)}
 
-    .hero { display:grid; grid-template-columns:1fr 380px; gap:32px; margin-top:28px; align-items:start; }
-    .hero-left { background:var(--card-bg); padding:22px; border-radius:14px; border:1px solid var(--border); box-shadow:var(--glow); min-height:300px; }
+    /* ----------------------------
+       Hero grid & portrait
+       ---------------------------- */
+    .hero{display:grid;grid-template-columns:1fr 380px;gap:28px;margin-top:22px;align-items:start}
+    .hero-left{background:var(--card-bg);padding:22px;border-radius:14px;border:1px solid var(--border);box-shadow:var(--glow);min-height:360px;transition:transform .35s ease}
+    .hero-left:hover{transform:translateY(-4px)}
+    .hero-title{font-family:'Playfair Display';font-size:44px;color:var(--accent);line-height:1.02;margin-bottom:8px}
+    body.dark .hero-title{color:var(--neon-red)}
+    .tagline{color:var(--text-soft);margin-bottom:16px}
 
-    .hero-title { font-family:"Playfair Display"; font-size:44px; margin-bottom:8px; color:var(--royal-blue); }
-    body.dark .hero-title { color:#ff1e1e; }
-
-    .tagline { color:var(--text-soft); margin-bottom:14px; }
-    body.dark .tagline { color:rgba(255,255,255,0.7); }
-
-    .portrait {
-      width:100%;
-      max-width:360px;
-      border-radius:18px;
-      overflow:hidden;
-      border:4px solid var(--gold-beige);
-      box-shadow:var(--glow);
-      transition: box-shadow .45s ease, transform .35s ease;
-      background: #fff;
+    .portrait{
+      border-radius:16px;overflow:hidden;border:4px solid var(--gold-beige);
+      background:#fff;box-shadow:var(--glow);transition:transform .35s ease, box-shadow .35s ease;
       position:relative;
     }
-    body.dark .portrait {
-      border-color: red;
-      box-shadow: 0 0 25px red, 0 0 60px rgba(255,0,0,0.4);
-      filter: brightness(1.18) contrast(1.08);
-      background: #0b0b0b;
+    .portrait:hover{transform:translateY(-8px) rotateX(2deg) rotateY(1deg)}
+    body.dark .portrait{border-color:var(--neon-red);box-shadow:0 0 40px rgba(255,0,0,0.45);background:#0b0b0b}
+
+    /* neon animated rim (pseudo element) */
+    .portrait::before{
+      content:"";position:absolute;inset:-6px;border-radius:20px;pointer-events:none;
+      background:linear-gradient(90deg, transparent, transparent);
+      opacity:0;transition:opacity .3s;
+      filter:blur(12px);
     }
+    .portrait:hover::before{opacity:1}
+    /* rim color by theme */
+    body:not(.dark) .portrait::before{ background: radial-gradient(circle at 20% 10%, rgba(28,64,115,0.18), transparent 20%), linear-gradient(90deg, rgba(26,62,110,0.85), rgba(214,199,161,0.45)); }
+    body.dark .portrait::before{ background: radial-gradient(circle at 20% 10%, rgba(255,0,0,0.28), transparent 28%), linear-gradient(90deg, rgba(255,0,0,0.95), rgba(255,0,0,0.35)); }
 
-    /* portrait image fade for smooth swapping */
-    .portrait img {
-      width:100%;
-      height:auto;
-      display:block;
-      opacity:1;
-      transition: opacity .45s ease, transform .45s ease;
-      will-change:opacity, transform;
+    .portrait img{display:block;width:100%;height:auto;transition:transform .45s ease, filter .45s ease}
+    .portrait:hover img{transform:scale(1.02)}
+
+    /* small 3D tilt on mouse for portrait (JS-driven) */
+    /* ----------------------------
+       Cards, lists, tech bullets
+       ---------------------------- */
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+    .card{background:var(--card-bg);padding:14px;border-radius:12px;border:1px solid var(--border);transition:transform .28s,box-shadow .28s}
+    .card:hover{transform:translateY(-6px);box-shadow:var(--glow)}
+    body.dark .card{background:rgba(255,0,0,0.06);border-color:rgba(255,0,0,0.3)}
+
+    .label{font-size:12px;color:var(--text-soft);text-transform:uppercase;letter-spacing:1px}
+    .value{font-family:'Playfair Display';font-size:16px;color:var(--accent);margin-top:6px}
+    body.dark .value{color:var(--neon-red)}
+
+    /* modern tech list icons */
+    .value ul{list-style:none;padding-left:0;margin:0}
+    .value ul li{position:relative;padding-left:22px;margin-bottom:8px;line-height:1.45}
+    .value ul li::before{
+      content:"";
+      width:10px;height:10px;border-radius:50%;
+      position:absolute;left:0;top:6px;
+      background:var(--royal-blue);box-shadow:0 0 6px var(--royal-blue);
+      transition:background .25s,box-shadow .25s;
     }
-    .portrait img.fade-out { opacity:0; transform:scale(0.995); }
+    body.dark .value ul li::before{background:var(--neon-red);box-shadow:0 0 10px var(--neon-red)}
 
-    .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
-    .card { background:var(--card-bg); padding:14px; border-radius:12px; border:1px solid var(--border); transition:.25s; }
-    .card:hover { transform: translateY(-6px); box-shadow: var(--glow); }
-    body.dark .card { background: rgba(255,0,0,0.07); border-color: red; }
+    /* ----------------------------
+       Neon border animation (subtle) for hero container in dark mode
+       ---------------------------- */
+    @keyframes neonPulse {
+      0%{ box-shadow: 0 0 0 rgba(255,0,0,0); }
+      50%{ box-shadow: 0 0 60px rgba(255,0,0,0.06); }
+      100%{ box-shadow: 0 0 0 rgba(255,0,0,0); }
+    }
+    body.dark .hero-left{ animation: neonPulse 6s infinite ease-in-out; }
 
-    .label { font-size:12px; text-transform:uppercase; color:var(--text-soft); letter-spacing:1px; }
-    body.dark .label { color: #ffb3b3; }
-
-    .value { font-family:"Playfair Display"; font-size:17px; color:var(--royal-blue); margin-top:6px; }
-    body.dark .value { color:#ff1e1e; }
-
-    footer { margin-top:28px; padding:20px; text-align:center; background:var(--royal-blue); color:white; border-radius:12px; }
-    body.dark footer { background:red; }
+    /* ----------------------------
+       Footer & responsiveness
+       ---------------------------- */
+    footer{margin-top:28px;padding:18px;text-align:center;background:var(--accent);color:#fff;border-radius:12px}
+    body.dark footer{background:var(--neon-red)}
 
     @media(max-width:920px){
-      .hero { grid-template-columns:1fr; }
-      .portrait { max-width:100%; margin:0 auto; }
-      .wrap { padding:18px; }
+      .hero{grid-template-columns:1fr;gap:18px}
+      .hero-title{font-size:28px}
+      .portrait{max-width:460px;margin:0 auto}
+      .wrap{padding:16px}
+      /* reduce heavy effects on small screens */
+      .portrait:hover{transform:none}
+      .card:hover{transform:none}
     }
   </style>
 </head>
 <body>
+  <!-- Loading screen -->
+  <div id="preloader" role="status" aria-live="polite" aria-label="Loading">
+    <div class="spinner" aria-hidden="true">
+      <!-- small SVG logo in the center -->
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#DDD" stroke-width="6" opacity=".9"></circle>
+        <text x="50" y="58" text-anchor="middle" font-family="Playfair Display" font-size="22" fill="#444">MR</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- tech background -->
   <div class="tech-bg" aria-hidden="true"></div>
 
   <div class="wrap" id="pageWrap">
     <header>
-      <div>
+      <div class="brand" role="banner">
         <div class="title">MuHamMaD ReحAn AhMeD</div>
         <div class="signature">Reḥan Ahmed</div>
       </div>
 
       <div>
-        <button id="darkToggle" class="toggle-dark" aria-pressed="false" title="Toggle dark mode">Dark Mode</button>
+        <button id="darkToggle" class="toggle-dark" aria-pressed="false" aria-label="Toggle dark mode">Dark Mode</button>
       </div>
     </header>
 
+    <!-- HERO -->
     <main>
-      <section class="hero">
-        <div class="hero-left" aria-labelledby="heroHeading">
-          <h1 id="heroHeading" class="hero-title">Elegance with a Modern Mind</h1>
-          <div class="tagline">• Computer Science • Passionate Learner • Future Programmer</div>
+      <section class="hero" aria-labelledby="heroHeading">
+        <div class="hero-left" id="heroLeft">
+          <!-- Typewriter title (progressive reveal) -->
+          <h1 id="heroHeading" class="hero-title" aria-live="polite" aria-atomic="true"></h1>
+          <div class="tagline"> • Computer Science • Passionate Learner • Future Programmer</div>
 
           <div class="info-grid" aria-live="polite">
             <div class="card"><div class="label">Father's Name</div><div class="value">Kamran Babar</div></div>
             <div class="card"><div class="label">Class</div><div class="value">Intermediate Computer Science</div></div>
-            <div class="card"><div class="label">Roll Number</div><div class="value">2193785</div></div>
-            <div class="card"><div class="label">College</div><div class="value"> Punjab Group of Colleges</div></div>
+            <div class="card"><div class="label">Roll</div><div class="value">2193674</div></div>
+            <div class="card"><div class="label">College</div><div class="value">Punjab Group of Colleges</div></div>
             <div class="card"><div class="label">Goal</div><div class="value">Software Engineer</div></div>
             <div class="card"><div class="label">Favourite Subject</div><div class="value">Computer Science</div></div>
-             <div class="card"><div class="label">Zodiac Sign</div><div class="value">𝓛𝓔𝓞 ♌</div></div>
             <div class="card"><div class="label">Skills</div><div class="value">HTML • CSS • JavaScript</div></div>
             <div class="card"><div class="label">Hobbies</div><div class="value">Reading • Exploring Tech</div></div>
-            
- <div class="card">
-  <div class="label">Dream Destination</div>
-  <div class="value">
-    <ul style="margin: 0; padding-left: 18px; list-style-type: disc;">
-      <li>T</li>
-      <li>U</li>
-      <li>R</li>
-      <li>K</li>
-      <li>E</li>
-      <li>Y</li>
-    </ul>
-  </div>
-</div>
+
             <div class="card">
-  <div class="label">Favourite Books</div>
-  <div class="value">
-    <ul style="margin: 0; padding-left: 18px; list-style-type: disc;">
-      <li>The Psychology of Money – Morgan Housel</li>
-      <li>Atomic Habits – James Clear</li>
-      <li>Kashf-ul-Mahjub – Hazrat Data Ganj Bakhsh</li>
-     <li>12 Rules for Life – Jordan B. Peterson</li>
-     <li>Kamyabi Ka Paigham – Qasim Ali Shah </li>
-    </ul>
-  </div>
-</div>
-<div class="card">
-  <div class="label">Personality Traits</div>
-  <div class="value">
-    <ul style="margin: 0; padding-left: 18px; list-style-type: disc;">
-      <li> Integrity – Always honest and true, even when no one is watching.</li>
-      <li>Confidence – Believes in self and takes bold steps without fear. </li>
-      <li>Empathy – Feels for others and understands their emotions deeply.</li>
-     <li>Discipline – Stays focused, manages time, and sticks to goals.</li>
-     <li> Positivity – Sees the bright side, even in tough situations. </li>
-    </ul>
-  </div>
-</div>
+              <div class="label">Dream Destinations</div>
+              <div class="value">
+                <ul>
+                  <li>Turkey</li>
+                  <li>UAE</li>
+                  <li>Qatar</li>
+                  <li>Saudi Arabia</li>
+                  <li> Italy</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="label">Favourite Books</div>
+              <div class="value">
+                <ul>
+                  <li>The Psychology of Money – Morgan Housel</li>
+                  <li>Atomic Habits – James Clear</li>
+                  <li>Kashf-ul-Mahjub – Hazrat Data Ganj Bakhsh</li>
+                  <li>12 Rules for Life – Jordan B. Peterson</li>
+                  <li>Kamyabi Ka Paigham – Qasim Ali Shah</li>
+                </ul>
+              </div>
+            </div>
 
           </div>
         </div>
 
         <aside aria-label="Portrait">
           <div class="portrait" id="portraitWrap" role="img" aria-hidden="false">
-            <!-- initial light image -->
             <img id="themePortrait" src="./assets/photo-light.jpg" alt="Portrait of MuHamMaD Rehan Ahmed" />
           </div>
         </aside>
@@ -236,125 +282,153 @@
   </div>
 
   <script>
-    // Finalized theme + image switch script with smooth fade and 3D lighting
-    (function () {
+    (function(){
+      // Constants
       const LIGHT_IMG = './assets/photo-light.jpg';
       const DARK_IMG = './assets/photo-dark.jpg';
+      const heroText = 'Elegance with a Modern Mind';
 
+      // Elements
+      const preloader = document.getElementById('preloader');
       const body = document.body;
       const toggleBtn = document.getElementById('darkToggle');
       const portraitImg = document.getElementById('themePortrait');
-      const portraitWrap = document.getElementById('portraitWrap');
       const yearSpan = document.getElementById('yearSpan');
+      const heroHeading = document.getElementById('heroHeading');
+      const portraitWrap = document.getElementById('portraitWrap');
 
       yearSpan.textContent = new Date().getFullYear();
 
-      // Preload images for smooth swapping
-      const preload = (src) => {
-        const i = new Image();
-        i.src = src;
-      };
-      preload(LIGHT_IMG);
-      preload(DARK_IMG);
+      // Preload images & hide preloader when ready
+      function preloadImages(urls){
+        return Promise.all(urls.map(u => new Promise((res) => {
+          const i = new Image();
+          i.src = u;
+          i.onload = res;
+          i.onerror = res;
+        })));
+      }
 
-      // Apply portrait with fade
-      function setPortrait(src) {
+      // Typewriter effect
+      function typewriter(el, text, speed=45){
+        el.textContent = '';
+        let i = 0;
+        const interval = setInterval(() => {
+          el.textContent += text[i] === ' ' ? ' ' : text[i];
+          i++;
+          if (i >= text.length) clearInterval(interval);
+        }, speed);
+      }
+
+      // Smooth portrait swap with fade
+      function setPortrait(src){
         if (!portraitImg) return;
-        // If same src, nothing to do
         if (portraitImg.getAttribute('src') === src) return;
-
-        // fade out -> swap -> fade in
-        portraitImg.classList.add('fade-out');
-        // small delay to allow CSS fade out
+        portraitImg.style.opacity = '0';
         setTimeout(() => {
-          portraitImg.setAttribute('src', src);
-          // ensure image has loaded before fade-in
-          const imgCheck = new Image();
-          imgCheck.src = src;
-          imgCheck.onload = () => {
-            portraitImg.classList.remove('fade-out');
-          };
-          // fallback in case onload doesn't fire fast
-          setTimeout(() => portraitImg.classList.remove('fade-out'), 700);
+          portraitImg.src = src;
+          // ensure visible once loaded
+          portraitImg.onload = () => portraitImg.style.opacity = '1';
+          // fallback
+          setTimeout(()=> portraitImg.style.opacity = '1', 600);
         }, 220);
       }
 
-      // Apply 3D lighting changes based on theme
-      function apply3DLighting() {
+      // Apply 3D lighting / neon rim depending on theme
+      function apply3DEffects(isDark){
         if (!portraitWrap) return;
-        if (body.classList.contains('dark')) {
-          portraitWrap.style.boxShadow = '0 10px 40px rgba(255,0,0,0.22), inset 0 0 30px rgba(255,0,0,0.06)';
+        if (isDark){
+          portraitWrap.style.boxShadow = '0 12px 48px rgba(255,0,0,0.22), inset 0 0 36px rgba(255,0,0,0.05)';
           portraitWrap.style.transform = 'translateZ(0) scale(1.01)';
         } else {
-          portraitWrap.style.boxShadow = '0 10px 40px rgba(26,62,110,0.12)';
+          portraitWrap.style.boxShadow = '0 12px 48px rgba(26,62,110,0.12)';
           portraitWrap.style.transform = 'translateZ(0) scale(1)';
         }
       }
 
-      // Apply theme to page and images
-      function applyTheme(isDark, save = true) {
-        if (isDark) {
+      // Apply theme and swap image
+      function applyTheme(isDark, persist=true){
+        if (isDark){
           body.classList.add('dark');
           toggleBtn.textContent = 'Light Mode';
-          toggleBtn.setAttribute('aria-pressed', 'true');
+          toggleBtn.setAttribute('aria-pressed','true');
           setPortrait(DARK_IMG);
         } else {
           body.classList.remove('dark');
           toggleBtn.textContent = 'Dark Mode';
-          toggleBtn.setAttribute('aria-pressed', 'false');
+          toggleBtn.setAttribute('aria-pressed','false');
           setPortrait(LIGHT_IMG);
         }
-        apply3DLighting();
-        // persist preference
-        if (save) {
-          try { localStorage.setItem('prefersDark', isDark ? 'true' : 'false'); } catch (e) {}
+        apply3DEffects(isDark);
+        if (persist){
+          try { localStorage.setItem('prefersDark', isDark ? 'true' : 'false'); } catch(e){}
         }
       }
 
-      // Toggle function
-      function toggleTheme() {
-        // quick flicker effect (brief)
-        body.classList.add('dark-flicker');
-        setTimeout(() => body.classList.remove('dark-flicker'), 260);
-
+      // Toggle handler
+      function toggleTheme(){
         const willBeDark = !body.classList.contains('dark');
+        // short flicker
+        body.classList.add('dark-flicker');
+        setTimeout(()=> body.classList.remove('dark-flicker'), 260);
         applyTheme(willBeDark);
       }
 
-      // Init: read stored preference or system preference
-      function init() {
-        let stored;
-        try { stored = localStorage.getItem('prefersDark'); } catch(e) { stored = null; }
-        if (stored === 'true') {
-          applyTheme(true, false);
-        } else if (stored === 'false') {
-          applyTheme(false, false);
-        } else {
-          // use prefers-color-scheme as fallback
+      // Initialize: read stored preference or system
+      function init(){
+        const stored = (() => {
+          try { return localStorage.getItem('prefersDark'); } catch(e){ return null; }
+        })();
+
+        if (stored === 'true') applyTheme(true, false);
+        else if (stored === 'false') applyTheme(false, false);
+        else {
           const preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
           applyTheme(preferDark, false);
         }
+
+        // Typewriter start (with accessible fallback)
+        if (heroHeading){
+          // if prefers-reduced-motion, just set text
+          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (prefersReduced) heroHeading.textContent = heroText;
+          else typewriter(heroHeading, heroText, 38);
+        }
+
+        // Attach toggle events
+        toggleBtn.addEventListener('click', toggleTheme);
+        toggleBtn.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') toggleTheme(); });
       }
 
-      // Hook events
-      toggleBtn.addEventListener('click', toggleTheme);
-      toggleBtn.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') toggleTheme();
+      // Portrait subtle tilt follow mouse (only desktop)
+      function portraitMouseMove(){
+        const preferReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (window.innerWidth < 920 || preferReduced) return;
+
+        window.addEventListener('mousemove', (e) => {
+          const rect = portraitWrap.getBoundingClientRect();
+          const cx = rect.left + rect.width/2;
+          const cy = rect.top + rect.height/2;
+          const dx = (e.clientX - cx) / rect.width;
+          const dy = (e.clientY - cy) / rect.height;
+          const rx = Math.max(-6, Math.min(6, dy * -12));
+          const ry = Math.max(-8, Math.min(8, dx * 12));
+          portraitWrap.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0) scale(${body.classList.contains('dark') ? 1.01 : 1})`;
+        }, { passive: true });
+
+        // reset on leave
+        portraitWrap.addEventListener('mouseleave', () => portraitWrap.style.transform = body.classList.contains('dark') ? 'scale(1.01)' : 'scale(1)');
+      }
+
+      // Boot: preload images then hide preloader and init
+      preloadImages([LIGHT_IMG, DARK_IMG]).then(() => {
+        // hide preloader smoothly
+        preloader.classList.add('hidden');
+        setTimeout(()=> preloader.style.display = 'none', 420);
+        init();
+        portraitMouseMove();
       });
 
-      // Also observe class changes (in case other scripts toggle theme)
-      new MutationObserver(() => {
-        const isDark = body.classList.contains('dark');
-        // ensure image state matches
-        setPortrait(isDark ? DARK_IMG : LIGHT_IMG);
-        apply3DLighting();
-      }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-      // Run init on DOM ready
-      document.addEventListener('DOMContentLoaded', init);
-
-      // Also call init immediately in case script placed at bottom (defensive)
-      init();
     })();
   </script>
 </body>
